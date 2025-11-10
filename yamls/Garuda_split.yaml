@@ -1,0 +1,49 @@
+# GARUDA (Generative Agentic Rogue Uncooperative Distributed Attack) in SPLIT LEARNING
+# This file is for the new research prototype
+
+resumed_model: null
+data_dir:   ./data
+load_data_from_pkl: False
+pre_cache_data_path: data/pre_cached_data.pt.tar
+
+### Client/Server Optimizer Setting
+benign_lr: 0.001
+benign_momentum: 0.9
+benign_weight_decay: 0.0005 
+local_epochs: 1 # Number of local epochs per client per round
+
+### Malicious Client (GARUDA) Attack Setting
+# These are for the GAN-based trigger generation
+discriminator_lr: 0.001
+trigger_lr : 0.001
+generator_lr: 0.001
+generator_noise_dim: 100 # Input dim for noise vector
+# Number of GAN training steps to run *before* the main training pass
+trigger_search_no_times: 5 
+
+### Server Setting
+agg_method: SplitLearning # No federated aggregation, just SL
+sample_dirichlet: True
+dirichlet_alpha: 1
+train_batch_size: 64
+test_batch_size: 1000
+no_of_total_participants: 10
+no_of_participants_per_iteration: 10 # Select all clients
+test_interval: 1 # Test every round
+
+### Poisoning Setting
+poisoned_pattern_choose: 2 # 1 (pixel), 2 (blend)
+blend_alpha: 0.2
+poison_label_swap: [0,1,2] # Targets for 3 attackers
+no_of_adversaries: 3 # Number of malicious clients in the pool
+
+### General Setting
+start_iteration: 0
+end_iteration: 200
+poisoned_start_iteration: 150 # Start attack after model is stable
+poisoned_end_iteration: 200
+poisoned_len: 8 # Number of samples to poison in a batch
+trigger_size: 5
+seed: 123
+malicious_train_algo: SplitGaruda # The new attack name
+defense_method: None # SplitLearning is the setup, not a defense
